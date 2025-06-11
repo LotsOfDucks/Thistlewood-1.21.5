@@ -57,7 +57,7 @@ public class ModBlocks {
     public static final Block CREEPING_THISTLE = register(
             "creeping_thistle",
             CreepingThistleBlock::new,
-            AbstractBlock.Settings.create().mapColor(MapColor.LICHEN_GREEN).replaceable().noCollision().strength(1.0F).sounds(BlockSoundGroup.GLOW_LICHEN).burnable().pistonBehavior(PistonBehavior.DESTROY),
+            AbstractBlock.Settings.create().mapColor(MapColor.LICHEN_GREEN).replaceable().noCollision().strength(1.0F).sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
             true
     );
 

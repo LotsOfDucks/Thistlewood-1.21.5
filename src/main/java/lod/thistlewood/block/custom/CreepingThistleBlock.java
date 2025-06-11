@@ -12,13 +12,20 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+
+import java.util.Map;
+import java.util.function.Function;
 
 public class CreepingThistleBlock extends MultifaceGrowthBlock {
     public static final MapCodec<CreepingThistleBlock> CODEC = createCodec(CreepingThistleBlock::new);
@@ -26,11 +33,34 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
     public static final BooleanProperty GROWING;
     public static final BooleanProperty GROWINGVIS;
     public static final BooleanProperty WATERLOGGED;
+    private final Function<BlockState, VoxelShape> shapeFunction;
 
     public CreepingThistleBlock(Settings settings) {
         super(settings);
-
+        this.shapeFunction = this.createShapeFunction();
         this.setDefaultState(this.getDefaultState().with(GROWING, true).with(GROWINGVIS, true));
+    }
+
+    private Function<BlockState, VoxelShape> createShapeFunction() {
+        Map<Direction, VoxelShape> map = VoxelShapes.createFacingShapeMap(Block.createCuboidZShape(16.0, 0.0, 4.0));
+        return this.createShapeFunction((state) -> {
+            VoxelShape voxelShape = VoxelShapes.empty();
+            Direction[] var3 = DIRECTIONS;
+            int var4 = var3.length;
+
+            for(int var5 = 0; var5 < var4; ++var5) {
+                Direction direction = var3[var5];
+                if (hasDirection(state, direction)) {
+                    voxelShape = VoxelShapes.union(voxelShape, map.get(direction));
+                }
+            }
+
+            return voxelShape.isEmpty() ? VoxelShapes.fullCube() : voxelShape;
+        });
+    }
+
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return this.shapeFunction.apply(state);
     }
 
     @Override

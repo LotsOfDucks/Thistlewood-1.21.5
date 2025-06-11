@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:block/glow_lichen"
+    "layer0": "thistlewood:block/creeping_thistle"
   }
 }
