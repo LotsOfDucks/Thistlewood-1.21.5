@@ -1,0 +1,118 @@
+package lod.thistlewood.block.custom;
+
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.tag.BiomeTags;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
+
+public class CreepingThistleBlock extends MultifaceGrowthBlock {
+    public static final MapCodec<CreepingThistleBlock> CODEC = createCodec(CreepingThistleBlock::new);
+    private final MultifaceGrower grower = new MultifaceGrower(this);
+    public static final BooleanProperty GROWING;
+    public static final BooleanProperty GROWINGVIS;
+    public static final BooleanProperty WATERLOGGED;
+
+    public CreepingThistleBlock(Settings settings) {
+        super(settings);
+
+        this.setDefaultState(this.getDefaultState().with(GROWING, true).with(GROWINGVIS, true));
+    }
+
+    @Override
+    public MapCodec<? extends MultifaceGrowthBlock> getCodec() {
+        return CODEC;
+    }
+
+    @Override
+    public MultifaceGrower getGrower() {
+        return this.grower;
+    }
+
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+        if (entity instanceof LivingEntity && entity.getType() != EntityType.BEE) {
+            if (world instanceof ServerWorld serverWorld) {
+                Vec3d vec3d = entity.isControlledByPlayer() ? entity.getMovement() : entity.getLastRenderPos().subtract(entity.getPos());
+                if (vec3d.horizontalLengthSquared() > 0.0) {
+                    double d = Math.abs(vec3d.getX());
+                    double e = Math.abs(vec3d.getZ());
+                    if (d >= 0.003000000026077032 || e >= 0.003000000026077032) {
+                        entity.damage(serverWorld, world.getDamageSources().sweetBerryBush(), 1.0F);
+                    }
+                }
+            }
+            if (entity instanceof PlayerEntity && !state.get(GROWING)) {
+                if (world.random.nextInt(50) == 0 && world.getTime() % 10L == 0L) {
+                    world.setBlockState(pos, state.with(GROWING, true).with(GROWINGVIS, true));
+                }
+            }
+        }
+
+    }
+
+    protected boolean hasRandomTicks(BlockState state) {
+        return state.get(GROWING);
+    }
+
+    public boolean isGrowing(WorldView world, BlockPos pos, BlockState state) {
+        return Direction.stream().anyMatch((direction) -> this.grower.canGrow(state, world, pos, direction.getOpposite()));
+    }
+
+    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        if (world.getGameRules().getBoolean(GameRules.DO_VINES_SPREAD)) {
+            if (random.nextInt(10) == 0) {
+                if (!this.isGrowing(world, pos, state)) {
+                    if (world.getBiome(pos).isIn(BiomeTags.IS_FOREST)) {
+                        world.setBlockState(pos, state.with(GROWING, false).with(GROWINGVIS, false), 2);
+                    } else {
+                        world.setBlockState(pos, state.with(GROWING, false), 2);
+                    }
+                } else {
+                    this.grow(world, random, pos, state);
+                }
+            }
+        }
+    }
+
+    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+        this.grower.grow(state, world, pos, random);
+    }
+
+    protected boolean isTransparent(BlockState state) {
+        return state.getFluidState().isEmpty();
+    }
+
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        Direction[] var2 = DIRECTIONS;
+        int var3 = var2.length;
+
+        for(int var4 = 0; var4 < var3; ++var4) {
+            Direction direction = var2[var4];
+            if (this.canHaveDirection(direction)) {
+                builder.add(getProperty(direction));
+            }
+        }
+
+        builder.add(WATERLOGGED, GROWING, GROWINGVIS);
+    }
+
+    static {
+        WATERLOGGED = Properties.WATERLOGGED;
+        GROWING = BooleanProperty.of("growing");
+        GROWINGVIS = BooleanProperty.of("growingvis");
+    }
+}

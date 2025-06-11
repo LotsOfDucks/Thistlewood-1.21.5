@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "thistlewood",
+	"version": "${0.1}",
+	"name": "Thistlewood",
+	"description": "A tiny mod adding a new biome or 2.",
+	"authors": [
+		"LotsOfDucks :D"
+	],
+	"contact": {
+		"homepage": "none atm",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/thistlewood/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"lod.thistlewood.Thistlewood"
+		],
+		"fabric-datagen": [
+			"lod.thistlewood.ThistlewoodDataGenerator"
+		],
+		"client": [
+			"lod.thistlewood.ThistlewoodClient"
+		]
+	},
+	"mixins": [
+		"thistlewood.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
