@@ -1,18 +1,26 @@
 package lod.thistlewood.block.custom;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.tag.BiomeTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -23,6 +31,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.event.GameEvent;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -33,12 +42,13 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
     public static final BooleanProperty GROWING;
     public static final BooleanProperty GROWINGVIS;
     public static final BooleanProperty WATERLOGGED;
+    public static final BooleanProperty CAN_REACTIVATE;
     private final Function<BlockState, VoxelShape> shapeFunction;
 
     public CreepingThistleBlock(Settings settings) {
         super(settings);
         this.shapeFunction = this.createShapeFunction();
-        this.setDefaultState(this.getDefaultState().with(GROWING, true).with(GROWINGVIS, true));
+        this.setDefaultState(this.getDefaultState().with(GROWING, true).with(GROWINGVIS, true).with(CAN_REACTIVATE, true));
     }
 
     private Function<BlockState, VoxelShape> createShapeFunction() {
@@ -82,7 +92,7 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
                     double e = Math.abs(vec3d.getZ());
                     if (d >= 0.003000000026077032 || e >= 0.003000000026077032) {
                         entity.damage(serverWorld, world.getDamageSources().sweetBerryBush(), 1.0F);
-                        if (world.getTime() % 10L == 0L && !state.get(GROWING)) {
+                        if (world.getTime() % 10L == 0L && !state.get(GROWING) && state.get(CAN_REACTIVATE)) {
                             if (world.random.nextInt(50) == 0) {
                                 world.setBlockState(pos, state.with(GROWING, true));
                             }
@@ -90,6 +100,23 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
                     }
                 }
             }
+        }
+    }
+
+    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (stack.isOf(Items.SHEARS) && (state.get(GROWING) || state.get(CAN_REACTIVATE))) {
+            world.setBlockState(pos, state.with(GROWING, false).with(CAN_REACTIVATE, false));
+            if (player != null) {
+                stack.damage(1, player);
+            }
+            if (player instanceof ServerPlayerEntity) {
+                Criteria.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity)player, pos, stack);
+            }
+            world.playSound(player, pos, SoundEvents.BLOCK_MANGROVE_ROOTS_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, state.with(GROWING, false).with(CAN_REACTIVATE, false)));
+            return ActionResult.SUCCESS;
+        } else {
+            return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
         }
     }
 
@@ -136,12 +163,13 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
             }
         }
 
-        builder.add(WATERLOGGED, GROWING, GROWINGVIS);
+        builder.add(WATERLOGGED, GROWING, GROWINGVIS, CAN_REACTIVATE);
     }
 
     static {
         WATERLOGGED = Properties.WATERLOGGED;
         GROWING = BooleanProperty.of("growing");
         GROWINGVIS = BooleanProperty.of("growingvis");
+        CAN_REACTIVATE = BooleanProperty.of("can_reactivate");
     }
 }
