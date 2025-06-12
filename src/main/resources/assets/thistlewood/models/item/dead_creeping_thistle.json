@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "thistlewood:block/creeping_thistle_dead"
+  }
+}

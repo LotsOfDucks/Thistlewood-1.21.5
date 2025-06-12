@@ -2,6 +2,7 @@ package lod.thistlewood.block;
 
 import lod.thistlewood.Thistlewood;
 import lod.thistlewood.block.custom.CreepingThistleBlock;
+import lod.thistlewood.block.custom.DeadCreepingThistleBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
@@ -57,7 +58,14 @@ public class ModBlocks {
     public static final Block CREEPING_THISTLE = register(
             "creeping_thistle",
             CreepingThistleBlock::new,
-            AbstractBlock.Settings.create().mapColor(MapColor.LICHEN_GREEN).replaceable().noCollision().strength(1.0F).sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
+            AbstractBlock.Settings.create().mapColor((state) -> state.get(CreepingThistleBlock.GROWINGVIS) ? MapColor.GREEN : MapColor.PALE_YELLOW).replaceable().noCollision().strength(0.8F).requiresTool().sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
+            true
+    );
+
+    public static final Block DEAD_CREEPING_THISTLE = register(
+            "dead_creeping_thistle",
+            DeadCreepingThistleBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.PALE_YELLOW).replaceable().noCollision().strength(0.8F).requiresTool().sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
             true
     );
 

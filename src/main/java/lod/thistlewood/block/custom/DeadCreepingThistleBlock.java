@@ -1,44 +1,38 @@
 package lod.thistlewood.block.custom;
 
-import com.mojang.serialization.MapCodec;
-import net.minecraft.block.*;
+import lod.thistlewood.block.ModBlocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.MultifaceBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 
 import java.util.Map;
 import java.util.function.Function;
 
-public class CreepingThistleBlock extends MultifaceGrowthBlock {
-    public static final MapCodec<CreepingThistleBlock> CODEC = createCodec(CreepingThistleBlock::new);
-    private final MultifaceGrower grower = new MultifaceGrower(this);
-    public static final BooleanProperty GROWING;
-    public static final BooleanProperty GROWINGVIS;
+public class DeadCreepingThistleBlock extends MultifaceBlock {
     public static final BooleanProperty WATERLOGGED;
     private final Function<BlockState, VoxelShape> shapeFunction;
 
-    public CreepingThistleBlock(Settings settings) {
+    public DeadCreepingThistleBlock(Settings settings) {
         super(settings);
         this.shapeFunction = this.createShapeFunction();
-        this.setDefaultState(this.getDefaultState().with(GROWING, true).with(GROWINGVIS, true));
+        this.setDefaultState(this.getDefaultState());
     }
 
     private Function<BlockState, VoxelShape> createShapeFunction() {
@@ -63,16 +57,6 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
         return this.shapeFunction.apply(state);
     }
 
-    @Override
-    public MapCodec<? extends MultifaceGrowthBlock> getCodec() {
-        return CODEC;
-    }
-
-    @Override
-    public MultifaceGrower getGrower() {
-        return this.grower;
-    }
-
     protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
         if (entity instanceof LivingEntity && entity.getType() != EntityType.BEE) {
             if (world instanceof ServerWorld serverWorld) {
@@ -82,47 +66,10 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
                     double e = Math.abs(vec3d.getZ());
                     if (d >= 0.003000000026077032 || e >= 0.003000000026077032) {
                         entity.damage(serverWorld, world.getDamageSources().sweetBerryBush(), 1.0F);
-                        if (world.getTime() % 10L == 0L && !state.get(GROWING)) {
-                            if (world.random.nextInt(50) == 0) {
-                                world.setBlockState(pos, state.with(GROWING, true));
-                            }
-                        }
                     }
                 }
             }
         }
-    }
-
-    protected boolean hasRandomTicks(BlockState state) {
-        return state.get(GROWING);
-    }
-
-    public boolean isGrowing(WorldView world, BlockPos pos, BlockState state) {
-        return Direction.stream().anyMatch((direction) -> this.grower.canGrow(state, world, pos, direction.getOpposite()));
-    }
-
-    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (world.getGameRules().getBoolean(GameRules.DO_VINES_SPREAD)) {
-            if (random.nextInt(10) == 0) {
-                if (!this.isGrowing(world, pos, state)) {
-                    if (world.getBiome(pos).isIn(BiomeTags.IS_FOREST)) {
-                        world.setBlockState(pos, state.with(GROWING, false).with(GROWINGVIS, false), 2);
-                    } else {
-                        world.setBlockState(pos, state.with(GROWING, false), 2);
-                    }
-                } else {
-                    this.grow(world, random, pos, state);
-                }
-            }
-        }
-    }
-
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        this.grower.grow(state, world, pos, random);
-    }
-
-    protected boolean isTransparent(BlockState state) {
-        return state.getFluidState().isEmpty();
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -136,12 +83,10 @@ public class CreepingThistleBlock extends MultifaceGrowthBlock {
             }
         }
 
-        builder.add(WATERLOGGED, GROWING, GROWINGVIS);
+        builder.add(WATERLOGGED);
     }
 
     static {
         WATERLOGGED = Properties.WATERLOGGED;
-        GROWING = BooleanProperty.of("growing");
-        GROWINGVIS = BooleanProperty.of("growingvis");
     }
 }

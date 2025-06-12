@@ -2,6 +2,8 @@
   "itemgroup.thistlewood.misc": "Ducks' Delights Misc",
 
   "item.thistlewood.creeping_thistle": "Creeping Thistle",
+  "item.thistlewood.dead_creeping_thistle": "Dead Creeping Thistle",
 
-  "block.thistlewood.creeping_thistle": "Creeping Thistle"
+  "block.thistlewood.creeping_thistle": "Creeping Thistle",
+  "block.thistlewood.dead_creeping_thistle": "Dead Creeping Thistle"
 }

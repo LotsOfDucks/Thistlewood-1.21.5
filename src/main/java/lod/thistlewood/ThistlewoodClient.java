@@ -9,5 +9,6 @@ public class ThistlewoodClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.CREEPING_THISTLE);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.DEAD_CREEPING_THISTLE);
     }
 }

@@ -19,6 +19,7 @@ public class ModItemGroups {
                     .displayName(Text.translatable("itemgroup.thistlewood.misc"))
                     .entries((displayContext, entries) -> {
                         entries.add(ModBlocks.CREEPING_THISTLE);
+                        entries.add(ModBlocks.DEAD_CREEPING_THISTLE);
                     }).build());
 
     public static void initialize() {

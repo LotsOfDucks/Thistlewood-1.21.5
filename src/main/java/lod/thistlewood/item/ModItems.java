@@ -1,6 +1,8 @@
 package lod.thistlewood.item;
 
+import lod.thistlewood.block.ModBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.*;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
