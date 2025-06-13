@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"0": "thistlewood:block/creeping_thistle",
 		"particle": "thistlewood:block/creeping_thistle"

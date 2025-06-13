@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "thistlewood:block/blackberry_crop_stage0_age0"
+    },
+    "age=1": {
+      "model": "thistlewood:block/blackberry_crop_stage0_age1"
+    },
+    "age=2,has_fruit=false": {
+      "model": "thistlewood:block/blackberry_crop_stage0_age2"
+    },
+    "age=2,has_fruit=true": {
+      "model": "thistlewood:block/blackberry_crop_stage0_age2_berries"
+    },
+    "age=3": {
+      "model": "thistlewood:block/blackberry_crop_stage1_age3"
+    },
+    "age=4,has_fruit=false": {
+      "model": "thistlewood:block/blackberry_crop_stage1_age4"
+    },
+    "age=4,has_fruit=true": {
+      "model": "thistlewood:block/blackberry_crop_stage1_age4_berries"
+    },
+    "age=5,has_fruit=false": {
+      "model": "thistlewood:block/blackberry_crop_stage2_age5"
+    },
+    "age=5,has_fruit=true": {
+      "model": "thistlewood:block/blackberry_crop_stage2_age5_berries"
+    }
+  }
+}

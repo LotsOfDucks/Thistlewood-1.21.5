@@ -1,6 +1,7 @@
 package lod.thistlewood.block;
 
 import lod.thistlewood.Thistlewood;
+import lod.thistlewood.block.custom.BlackberryCropBlock;
 import lod.thistlewood.block.custom.CreepingThistleBlock;
 import lod.thistlewood.block.custom.DeadCreepingThistleBlock;
 import net.minecraft.block.*;
@@ -69,8 +70,17 @@ public class ModBlocks {
             true
     );
 
+    public static final Block BLACKBERRY_CROP = register(
+            "blackberry_crop",
+            BlackberryCropBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.GREEN).replaceable().offset(AbstractBlock.OffsetType.XYZ).noCollision().strength(0.8F).requiresTool().sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
+            false
+    );
+
     public static void initialize() {
         FireBlock fireBlock = (FireBlock) Blocks.FIRE;
         fireBlock.registerFlammableBlock(ModBlocks.CREEPING_THISTLE, 30, 60);
+        fireBlock.registerFlammableBlock(ModBlocks.DEAD_CREEPING_THISTLE, 30, 60);
+        fireBlock.registerFlammableBlock(ModBlocks.BLACKBERRY_CROP, 30, 60);
     }
 }

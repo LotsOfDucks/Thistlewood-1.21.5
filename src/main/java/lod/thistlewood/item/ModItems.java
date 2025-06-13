@@ -18,6 +18,8 @@ public final class ModItems {
         return (settings) -> new BlockItem(block, settings.useItemPrefixedTranslationKey());
     }
 
+    public static final Item BLACKBERRY = register("blackberry", createBlockItemWithUniqueName(ModBlocks.BLACKBERRY_CROP), new Item.Settings());
+
     //public static final Item CUSTOM_ITEM = register("custom_item", Item::new, new Item.Settings());
 
     public static Item register(String path, Function<Item.Settings, Item> factory, Item.Settings settings) {

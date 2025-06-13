@@ -20,6 +20,7 @@ public class ModItemGroups {
                     .entries((displayContext, entries) -> {
                         entries.add(ModBlocks.CREEPING_THISTLE);
                         entries.add(ModBlocks.DEAD_CREEPING_THISTLE);
+                        entries.add(ModItems.BLACKBERRY);
                     }).build());
 
     public static void initialize() {
