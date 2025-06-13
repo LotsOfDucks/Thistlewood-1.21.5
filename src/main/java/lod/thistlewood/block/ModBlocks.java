@@ -73,7 +73,7 @@ public class ModBlocks {
     public static final Block BLACKBERRY_CROP = register(
             "blackberry_crop",
             BlackberryCropBlock::new,
-            AbstractBlock.Settings.create().mapColor(MapColor.GREEN).replaceable().offset(AbstractBlock.OffsetType.XYZ).noCollision().strength(0.8F).requiresTool().sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
+            AbstractBlock.Settings.create().mapColor(MapColor.GREEN).offset(AbstractBlock.OffsetType.XYZ).noCollision().strength(0.8F).requiresTool().sounds(BlockSoundGroup.MANGROVE_ROOTS).burnable().pistonBehavior(PistonBehavior.DESTROY),
             false
     );
 

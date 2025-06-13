@@ -230,7 +230,7 @@ public class BlackberryCropBlock extends PlantBlock implements Fertilizable {
         if (world.getBlockState(pos).get(HAS_FRUIT)) {
             int j = 1 + world.random.nextInt(3);
             if (world.getBlockState(pos).get(STAGE) == 0) {
-                dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                 world.playSound(null, pos, SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
                 BlockState targetState = state.with(HAS_FRUIT, false);
                 world.setBlockState(pos, targetState, 2);
@@ -238,51 +238,51 @@ public class BlackberryCropBlock extends PlantBlock implements Fertilizable {
                 if (world.getBlockState(pos.up()).isOf(ModBlocks.BLACKBERRY_CROP)) {
                     BlockState targetState2 = world.getBlockState(pos.up()).with(HAS_FRUIT, false);
                     if (world.getBlockState(pos.up()).get(HAS_FRUIT)) {
-                        dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                        dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                         world.setBlockState(pos.up(), targetState2, 2);
                     }
                 }
                 if (world.getBlockState(pos.up(2)).isOf(ModBlocks.BLACKBERRY_CROP)) {
                     BlockState targetState3 = world.getBlockState(pos.up(2)).with(HAS_FRUIT, false);
                     if (world.getBlockState(pos.up(2)).get(HAS_FRUIT)) {
-                        dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                        dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                         world.setBlockState(pos.up(2), targetState3, 2);
                     }
                 }
             }
             if (world.getBlockState(pos).get(STAGE) == 1) {
                 world.playSound(null, pos.down(), SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-                dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                 BlockState targetState = state.with(HAS_FRUIT, false);
                 BlockState targetState2 = world.getBlockState(pos.down()).with(HAS_FRUIT, false);
                 world.setBlockState(pos, targetState, 2);
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos.down(), GameEvent.Emitter.of(player, targetState));
                 if (world.getBlockState(pos.down()).get(HAS_FRUIT)) {
-                    dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                    dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                     world.setBlockState(pos.down(), targetState2, 2);
                 }
                 if (world.getBlockState(pos.up()).isOf(ModBlocks.BLACKBERRY_CROP)) {
                     BlockState targetState3 = world.getBlockState(pos.up()).with(HAS_FRUIT, false);
                     if (world.getBlockState(pos.up()).get(HAS_FRUIT)) {
-                        dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                        dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                         world.setBlockState(pos.up(), targetState3, 2);
                     }
                 }
             }
             if (world.getBlockState(pos).get(STAGE) == 2) {
                 world.playSound(null, pos.down(), SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-                dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                 BlockState targetState = state.with(HAS_FRUIT, false);
                 BlockState targetState2 = world.getBlockState(pos.down()).with(HAS_FRUIT, false);
                 BlockState targetState3 = world.getBlockState(pos.down(2)).with(HAS_FRUIT, false);
                 world.setBlockState(pos, targetState, 2);
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos.down(), GameEvent.Emitter.of(player, targetState));
                 if (world.getBlockState(pos.down()).get(HAS_FRUIT)) {
-                    dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                    dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                     world.setBlockState(pos.down(), targetState2, 2);
                 }
                 if (world.getBlockState(pos.down(2)).get(HAS_FRUIT)) {
-                    dropStack(world, pos, new ItemStack(Items.SWEET_BERRIES, j));
+                    dropStack(world, pos, new ItemStack(ModItems.BLACKBERRY, j));
                     world.setBlockState(pos.down(2), targetState3, 2);
                 }
             }
